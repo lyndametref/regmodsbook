@@ -1,4 +1,5 @@
 ## Before beginning
+
 This book is designed as a companion to the [Regression Models](https://www.coursera.org/course/regmods)
 Coursera class as part of the [Data Science Specialization](https://www.coursera.org/specialization/jhudatascience/1?utm_medium=courseDescripTop), a
 ten course program offered by three faculty, Jeff Leek, Roger Peng and Brian Caffo,
@@ -132,34 +133,34 @@ of the heights.
 
 
 {lang=r,title="Loading and plotting Galton's data.",line-numbers=off}
-~~~
+```
 library(UsingR); data(galton); library(reshape); long <- melt(galton)
 g <- ggplot(long, aes(x = value, fill = variable))
 g <- g + geom_histogram(colour = "black", binwidth=1)
 g <- g + facet_grid(. ~ variable)
 g
-~~~
+```
 
 ![Plotting the `galton` dataset](images/galton.png)
 
 ### Finding the middle via least squares
 Consider only the children's heights. How could one describe the "middle"?
-One definition, let {$$}Y_i{/$$} be the height of child {$$}i{/$$} for
-{$$}i = 1, \ldots, n = 928{/$$}, then define the middle as the value
-of {$$}\mu{/$$} that minimizes
+One definition, let $Y_i$ be the height of child $i$ for
+$i = 1, \ldots, n = 928$, then define the middle as the value
+of $\mu$ that minimizes
 
-{$$}\sum_{i=1}^n (Y_i - \mu)^2.{/$$}
+$$\sum_{i=1}^n (Y_i - \mu)^2.$$
 
 This is physical center of mass of the histogram.
-You might have guessed that the answer {$$}\mu = \bar Y{/$$}. This is called
-the **least squares** estimate for {$$}\mu{/$$}. It is the point that minimizes
+You might have guessed that the answer $\mu = \bar Y$. This is called
+the **least squares** estimate for $\mu$. It is the point that minimizes
 the sum of the squared distances between the observed data and itself.
 
 
 
-Note, if there was no variation in the data, every value of {$$}Y_i{/$$} was
+Note, if there was no variation in the data, every value of $Y_i$ was
 the same, then there would be no error around the mean. Otherwise, our estimate
-has to balance the fact that our estimate of {$$}\mu{/$$} isn't going to
+has to balance the fact that our estimate of $\mu$ isn't going to
 predict every observation perfectly. Minimizing the average (or sum of the)
 squared errors seems like a reasonable strategy, though of course there are others.
 We could minimize the average absolute deviation between the data and estimated
@@ -170,13 +171,13 @@ with that for this class.
 ### Experiment
 Let's
 use rStudio's manipulate to see what value of
-{$$}\mu{/$$} minimizes the sum of the squared deviations. The code below
+$\mu$ minimizes the sum of the squared deviations. The code below
 allows you to create a slider to investigate estimates and their
 mean squared error.
 
 
 {lang=r,title="Using manipulate to find the least squares estimate.",line-numbers=off}
-~~~
+```
 library(manipulate)
 myHist <- function(mu){
     mse <- mean((galton$child - mu)^2)
@@ -186,17 +187,17 @@ myHist <- function(mu){
     g
 }
 manipulate(myHist(mu), mu = slider(62, 74, step = 0.5))
-~~~
+```
 
 The least squares estimate is the empirical mean.
 
 
 {lang=r,line-numbers=off}
-~~~
+```
 g <- ggplot(galton, aes(x = child)) + geom_histogram(fill = "salmon", colour = "black", binwidth=1)
 g <- g + geom_vline(xintercept = mean(galton$child), size = 3)
 g
-~~~
+```
 
 ![The best mean is the vertical line.](images/lsm.png)
 
@@ -204,11 +205,11 @@ g
 ## The math (not required)
 [Watch this video before beginning](https://www.youtube.com/watch?v=FV8D_fI5SRk&list=PLpl-gQkQivXjqHAJd2t-J_One_fYE55tC&index=3)
 
-Why is the sample average the least squares estimate for {$$}\mu{/$$}?
+Why is the sample average the least squares estimate for $\mu$?
 It's surprisingly easy to show. Perhaps more surprising is how generally
 these results can be extended.
 
-{$$}
+$$
 \begin{eqnarray*}
 \sum_{i=1}^n (Y_i - \mu)^2 & = & \sum_{i=1}^n (Y_i - \bar Y + \bar Y - \mu)^2 \\
                            & = & \sum_{i=1}^n (Y_i - \bar Y)^2 + 2 \sum_{i=1}^n (Y_i - \bar Y)  (\bar Y - \mu) + \sum_{i=1}^n (\bar Y - \mu)^2 \\
@@ -217,7 +218,7 @@ these results can be extended.
                            & = & \sum_{i=1}^n (Y_i - \bar Y)^2 + \sum_{i=1}^n (\bar Y - \mu)^2\\
                            & \geq & \sum_{i=1}^n (Y_i - \bar Y)^2 \
 \end{eqnarray*}
-{/$$}
+$$
 
 
 
@@ -230,9 +231,9 @@ We're interested in how the relate to each other. Let's plot the parent
 and child heights.
 
 {lang=r,line-numbers=off}
-~~~
+```
 ggplot(galton, aes(x = parent, y = child)) + geom_point()
-~~~
+```
 
 ![Plot of parent and child heights.](images/galton2.png)
 
@@ -253,17 +254,17 @@ Now let's find the line that goes through the origin (has intercept 0) by
 picking the best slope.
 
 
-Suppose that {$$}X_i{/$$} are the parent heights with the mean subtracted.
-Consider picking the slope {$$}\beta{/$$} that minimizes
+Suppose that $X_i$ are the parent heights with the mean subtracted.
+Consider picking the slope $\beta$ that minimizes
 
-{$$}\sum_{i=1}^n (Y_i - X_i \beta)^2. {/$$}
+$$\sum_{i=1}^n (Y_i - X_i \beta)^2. $$
 
-Each {$$}X_i \beta{/$$} is the vertical height of
-a line through the origin at point {$$}X_i{/$$}.
-Thus, {$$}Y_i - X_i \beta{/$$}
+Each $X_i \beta$ is the vertical height of
+a line through the origin at point $X_i$.
+Thus, $Y_i - X_i \beta$
 is the vertical distance between the line
-at each observed {$$}X_i{/$$} point (parental height) and the
-{$$}Y_i{/$$} (child height).
+at each observed $X_i$ point (parental height) and the
+$Y_i$ (child height).
 
 Our goal is exactly to use the origin as a pivot point and pick the
 line that minimizes the sum of the squared vertical distances
@@ -272,7 +273,7 @@ Subtract the means so that the origin is the mean of the parent
 and children heights.
 
 {title="Code for plotting the data.", lang=r, line-numbers=off}
-~~~
+```
 y <- galton$child - mean(galton$child)
 x <- galton$parent - mean(galton$parent)
 freqData <- as.data.frame(table(x, y))
@@ -291,7 +292,7 @@ myPlot <- function(beta){
     g
 }
 manipulate(myPlot(beta), beta = slider(0.6, 1.2, step = 0.02))
-~~~
+```
 
 
 ### The solution
@@ -299,7 +300,7 @@ In the next few lectures we'll talk about why this is the solution. But,
 rather than leave you hanging, here it is:
 
 {lang=r,line-numbers=off}
-~~~
+```
 > lm(I(child - mean(child))~ I(parent - mean(parent)) - 1, data = galton)
 Call:
 lm(formula = I(child - mean(child)) ~ I(parent - mean(parent)) -
@@ -308,7 +309,7 @@ lm(formula = I(child - mean(child)) ~ I(parent - mean(parent)) -
 Coefficients:
 I(parent - mean(parent))  
                    0.646  
-~~~
+```
 
 Let's plot the best fitting line. In the subsequent chapter we will learn all
 about creating, interpreting and performing inference on such mode fits. (Note

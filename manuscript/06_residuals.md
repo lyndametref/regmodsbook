@@ -19,24 +19,26 @@ and our linear regression fit looked like the following:
 
 Recall our linear model was
 
-{$$}Y_i = \beta_0 + \beta_1 X_i + \epsilon_i{/$$}
+$$
+Y_i = \beta_0 + \beta_1 X_i + \epsilon_i
+$$
 
-where we are assuming that {$$}\epsilon_i \sim N(0, \sigma^2){/$$}.
-Our observed outcome is {$$}Y_i{/$$} with associated
-predictor value, {$$}X_i{/$$}.  Let's label the predicted outcome
-for index {$$}i{/$$} as {$$}\hat Y_i{/$$}. Recall that we obtain
-our predictions by plugging our observed {$$}X_i{/$$} into the
+where we are assuming that $\epsilon_i \sim N(0, \sigma^2)$.
+Our observed outcome is $Y_i$ with associated
+predictor value, $X_i$.  Let's label the predicted outcome
+for index $i$ as $\hat Y_i$. Recall that we obtain
+our predictions by plugging our observed $X_i$ into the
 linear regression equation:
 
-{$$}
+$$
 \hat Y_i = \hat \beta_0 + \hat \beta_1 X_i
-{/$$}
+$$
 
 The residual is defined as the difference the between the observed and predicted outcome
 
-{$$}
+$$
 e_i = Y_i - \hat Y_i.
-{/$$}
+$$
 
 The residuals are exactly the vertical distance between the observed data point
 and the associated point on the regression line. Positive residuals have associated
@@ -45,20 +47,20 @@ Y values above the fitted line and negative residuals have values below.
 ![Picture of the residuals for the diamond data. Residuals are the signed length
 of the red lines.](images/resid1.png)
 
-Least squares minimizes the sum of the squared residuals, {$$}\sum_{i=1}^n e_i^2{/$$}.
-Note that the {$$}e_i{/$$} are observable, while the errors, {$$}\epsilon_i{/$$} are
+Least squares minimizes the sum of the squared residuals, $\sum_{i=1}^n e_i^2$.
+Note that the $e_i$ are observable, while the errors, $\epsilon_i$ are
 not. The residuals can be thought of as estimates of the errors.
 
 ## Properties of the residuals
 Let's consider some properties of the residuals.
-First, under our model, their expected value is 0,  {$$}E[e_i] = 0{/$$}.
-If an intercept is included, {$$}\sum_{i=1}^n e_i = 0{/$$}. Note this tells
-us that the residuals are not independent. If we know {$$}n-1{/$$} of them,
-we know the {$$}n^{th}{/$$}. In fact, we will only have {$$}n-p{/$$} free
-residuals, where {$$}p{/$$} is the number of coefficients in our regression model,
-so {$$}p=2{/$$} for linear regression with an intercept and slope.
-If a regressor variable, {$$}X_i{/$$}, is included in the model
-then {$$}\sum_{i=1}^n e_i X_i = 0{/$$}.
+First, under our model, their expected value is 0,  $E[e_i] = 0$.
+If an intercept is included, $\sum_{i=1}^n e_i = 0$. Note this tells
+us that the residuals are not independent. If we know $n-1$ of them,
+we know the $n^{th}$. In fact, we will only have $n-p$ free
+residuals, where $p$ is the number of coefficients in our regression model,
+so $p=2$ for linear regression with an intercept and slope.
+If a regressor variable, $X_i$, is included in the model
+then $\sum_{i=1}^n e_i X_i = 0$.
 
 What do we use residuals for? Most importantly,
 residuals are useful for investigating poor model fit.
@@ -85,7 +87,7 @@ These two kinds of variation add up to the total variation, which we'll see late
 The code below shows how to obtain the residuals.
 
 {lang=r,line-numbers=off}
-~~~
+```
 > data(diamond)
 > y <- diamond$price; x <- diamond$carat; n <- length(y)
 > fit <- lm(y ~ x)
@@ -100,7 +102,7 @@ The code below shows how to obtain the residuals.
 ## Let's do it again hard coding the calculation of Yhat
 max(abs(e - (y - coef(fit)[1] - coef(fit)[2] * x)))
 [1] 9.486e-13
-~~~
+```
 
 
 
@@ -142,28 +144,28 @@ If we look at the residual plot for the diamond data, things don't look so bad.
 ## Estimating residual variation
 [Watch this before beginning](https://www.youtube.com/watch?v=ZE3a4OZFWPA&list=PLpl-gQkQivXjqHAJd2t-J_One_fYE55tC&index=15)
 
-We've talked at length about how to estimate {$$}\beta_0{/$$} and {$$}\beta_1{/$$}.
-However, there's another parameter in our model, {$$}\sigma{/$$}.
-Recall that our model is {$$}Y_i = \beta_0 + \beta_1 X_i + \epsilon_i{/$$},
-where {$$}\epsilon_i \sim N(0, \sigma^2){/$$}.
+We've talked at length about how to estimate $\beta_0$ and $\beta_1$.
+However, there's another parameter in our model, $\sigma$.
+Recall that our model is $Y_i = \beta_0 + \beta_1 X_i + \epsilon_i$,
+where $\epsilon_i \sim N(0, \sigma^2)$.
 
 It seems natural to use our residual variation to estimate population
 error variation.
-In fact, the maximum likelihood estimate of {$$}\sigma^2{/$$} is
-{$$}\frac{1}{n}\sum_{i=1}^n e_i^2{/$$}, the average squared residual. Since
+In fact, the maximum likelihood estimate of $\sigma^2$ is
+$\frac{1}{n}\sum_{i=1}^n e_i^2$, the average squared residual. Since
 the residuals have a zero mean (if an intercept is included), this is close
 to the the calculating the variance of the residuals. However, to obtain
 unbiasedness, most people use
 
-{$$}
+$$
 \hat \sigma^2 = \frac{1}{n-2}\sum_{i=1}^n e_i^2.
-{/$$}
+$$
 
-The {$$}n-2{/$$} instead of {$$}n{/$$} is so that {$$}E[\hat \sigma^2] = \sigma^2{/$$}.
-This is exactly analogous to dividing by {$$}n-1{/$$} in the ordinary variance
+The $n-2$ instead of $n$ is so that $E[\hat \sigma^2] = \sigma^2$.
+This is exactly analogous to dividing by $n-1$ in the ordinary variance
 calculation. In fact, the ordinary variance (using `var` in R on a vector) is
 exactly the same as the residual variance estimate from a model that has an
-intercept and no slope. The {$$}n-2{/$$} instead of {$$}n-1{/$$} when we
+intercept and no slope. The $n-2$ instead of $n-1$ when we
 include a slope can be thought of as losing a degree of freedom from having
 to estimate an extra parameter (the slope).
 
@@ -175,7 +177,7 @@ on our own. (And from then on we'll just use `lm`.)
 ### Diamond example
 
 {title="Finding residual variance estimates.", lang=r,line-numbers=off}
-~~~
+```
 > y <- diamond$price; x <- diamond$carat; n <- length(y)
 > fit <- lm(y ~ x)
 ## the estimate from lm
@@ -184,7 +186,7 @@ on our own. (And from then on we'll just use `lm`.)
 ## directly calculating from the residuals
 > sqrt(sum(resid(fit)^2) / (n - 2))
 [1] 31.84
-~~~
+```
 
 ## Summarizing variation
 
@@ -193,24 +195,24 @@ our response. The total variability in our response is the variability
 around an intercept. This is also the variance estimate from a model with
 only an intercept:
 
-{$$}\mbox{Total variability}=\sum_{i=1}^n (Y_i - \bar Y)^2{/$$}
+$$\mbox{Total variability}=\sum_{i=1}^n (Y_i - \bar Y)^2$$
 
 The regression variability is the variability that is explained by adding the
 predictor. Mathematically, this is:
 
-{$$}\mbox{Regression variabilty} = \sum_{i=1}^n  (\hat Y_i - \bar Y)^2{/$$}.
+$$\mbox{Regression variabilty} = \sum_{i=1}^n  (\hat Y_i - \bar Y)^2$$.
 
 The residual variability is what's leftover around the regression line
 
-{$$}\mbox{Residual variability} = \sum_{i=1}^n (Y_i - \hat Y_i)^2{/$$}
+$$\mbox{Residual variability} = \sum_{i=1}^n (Y_i - \hat Y_i)^2$$
 
 It's a nice fact that the error and regression variability add up to the
 total variability:
 
-{$$}
+$$
 \sum_{i=1}^n (Y_i - \bar Y)^2
 = \sum_{i=1}^n (Y_i - \hat Y_i)^2 + \sum_{i=1}^n  (\hat Y_i - \bar Y)^2
-{/$$}
+$$
 
 Thus, we can think of regression as explaining away variability. The fact
 that all of the quantities are positive and that they add up this way allows
@@ -224,7 +226,7 @@ Notice how much the variation decreases when including the diamond mass.
 Here's the code:
 
 {lang=r,line-numbers=off}
-~~~
+```
 e = c(resid(lm(price ~ 1, data = diamond)),
       resid(lm(price ~ carat, data = diamond)))
 fit = factor(c(rep("Itc", nrow(diamond)),
@@ -234,7 +236,7 @@ g = g + geom_dotplot(binaxis = "y", size = 2, stackdir = "center", binwidth = 20
 g = g + xlab("Fitting approach")
 g = g + ylab("Residual price")
 g
-~~~
+```
 
 ![Residuals for intercept only and linear regression for the diamond
 example.](images/resid8.png)
@@ -244,18 +246,18 @@ example.](images/resid8.png)
 **R squared** is the percentage of the total variability that is explained
 by the linear relationship with the predictor
 
-{$$}
+$$
 R^2 = \frac{\sum_{i=1}^n  (\hat Y_i - \bar Y)^2}{\sum_{i=1}^n (Y_i - \bar Y)^2}
-{/$$}
+$$
 
 Here are some summary notes about R squared.
 
-* {$$}R^2{/$$} is the percentage of variation explained by the regression model.
-* {$$}0 \leq R^2 \leq 1{/$$}
-* {$$}R^2{/$$} is the sample correlation squared
-* {$$}R^2{/$$} can be a misleading summary of model fit.
+* $R^2$ is the percentage of variation explained by the regression model.
+* $0 \leq R^2 \leq 1$
+* $R^2$ is the sample correlation squared
+* $R^2$ can be a misleading summary of model fit.
   * Deleting data can inflate it.
-  * (For later.) Adding terms to a regression model always increases {$$}R^2{/$$}.
+  * (For later.) Adding terms to a regression model always increases $R^2$.
 
 
 Anscombe's residual (named after their inventor)

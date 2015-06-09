@@ -17,29 +17,29 @@ Regression to the mean, was invented by Francis Galton in the paper "Regression 
 Think of it this way, imagine if you simulated pairs of random normals.
 The largest first ones would be the largest by chance, and the probability that
 there are smaller for the second simulation is high.
-In other words  {$$}P(Y < x | X = x){/$$} gets bigger as {$$}x{/$$}
+In other words $P(Y < x | X = x)$ gets bigger as $x$
 heads to the very large values.
-Similarly {$$}P(Y > x | X = x){/$$} gets bigger as {$$}x{/$$} heads to very
+Similarly $P(Y > x | X = x)$ gets bigger as$x$heads to very
 small values. Think of the regression line as the intrinsic part and the
 regression to the mean as the result of noise.
-Unless {$$}Cor(Y, X) = 1{/$$} the intrinsic part isn't perfect and so we
+Unless $Cor(Y, X) = 1$ the intrinsic part isn't perfect and so we
 should think about how much regression to the mean should occur. In other words,
 what should we multiply tall parent's heights by to predict their children's
 height?
 
 ## Regression to the mean
 Let's investigate this with Galton's father and son data. (In this case )
-Suppose that we normalize {$$}X{/$$} (child's height) and {$$}Y{/$$}
+Suppose that we normalize $X$ (child's height) and $Y$
 (father's height) so that they both have mean 0 and variance 1.
-Then, recall, our regression line passes through {$$}(0, 0){/$$} (the mean of the X and Y).
-If the slope of the regression line is {$$}Cor(Y,X){/$$}, regardless of which variable is the outcome (recall, both standard deviations are 1).
-Notice if {$$}X{/$$} is the outcome and you create a plot where {$$}X{/$$}
+Then, recall, our regression line passes through $(0, 0)$ (the mean of the X and Y).
+If the slope of the regression line is $Cor(Y,X)$, regardless of which variable is the outcome (recall, both standard deviations are 1).
+Notice if $X$ is the outcome and you create a plot where $X$
 is the horizontal axis, the slope of the least squares line that you plot is
-{$$}1/Cor(Y, X){/$$}. Let's plot the normalized
+$1/Cor(Y, X)$. Let's plot the normalized
 father and son heights to investigate.
 
 {title="Code for the plot.", lang=r, line-numbers=off}
-~~~
+```
 library(UsingR)
 data(father.son)
 y <- (father.son$sheight - mean(father.son$sheight)) / sd(father.son$sheight)
@@ -57,16 +57,16 @@ g = g + geom_abline(intercept = 0, slope = 1 / rho, size = 2)
 g = g + xlab("Father's height, normalized")
 g = g + ylab("Son's height, normalized")
 g
-~~~
+```
 
 ![Regression to the mean, illustrated.](images/rttm.png)
 
 Let's investigate the plot and the regression fits.
 If you had to predict a son's normalized height, it would be
-{$$}Cor(Y, X) * X_i{/$$} where {$$}X_i{/$$} was the normalized
+$Cor(Y, X) * X_i$ where $X_i$ was the normalized
 father's height. Conversely,
 if you had to predict a father's normalized height, it would be
-{$$}Cor(Y, X) * Y_i{/$$}.
+$Cor(Y, X) * Y_i$.
 
 Multiplication by this correlation shrinks toward 0 (regression toward the mean).
 It is in this way that Galton used regression to account for regression toward

@@ -11,9 +11,9 @@ We'll  start with the `Swiss` dataset that is part of the
 `datasets` package. This can be loaded in R with:
 
 {lang=r,line-numbers=off}
-~~~
+```
 > require(datasets); data(swiss); ?swiss
-~~~
+```
 
 Standardized fertility measure and socio-economic indicators for each of 47
 French-speaking provinces of Switzerland at about 1888.
@@ -22,14 +22,14 @@ A data frame with 47 observations on 6 variables, each of which is in percent,
 i.e., in [0, 100].
 
 {lang=r,line-numbers=off}
-~~~
-[,1]   Fertility          a common standardized fertility measure
-[,2]   Agriculture        percent of males involved in agriculture as occupation
+```
+[,1]     Fertility          a common standardized fertility measure
+[,2]     Agriculture        percent of males involved in agriculture as occupation
 [,3]	 Examination        percent draftees receiving highest mark on army examination
 [,4]	 Education          percent education beyond primary school for draftees
 [,5]	 Catholic           percent catholic (as opposed to protestant)
 [,6]	 Infant.Mortality   live births who live less than 1 year
-~~~
+```
 
 All variables but Fertility give percentages of the population.
 
@@ -38,7 +38,7 @@ All variables but Fertility give percentages of the population.
 Let's see the result of calling `lm` on this data set.
 
 {lang=r,line-numbers=off}
-~~~
+```
 > summary(lm(Fertility ~ . , data = swiss))
                  Estimate Std. Error t value  Pr(>|t|)
 (Intercept)       66.9152   10.70604   6.250 1.906e-07
@@ -47,7 +47,7 @@ Examination       -0.2580    0.25388  -1.016 3.155e-01
 Education         -0.8709    0.18303  -4.758 2.431e-05
 Catholic           0.1041    0.03526   2.953 5.190e-03
 Infant.Mortality   1.0770    0.38172   2.822 7.336e-03
-~~~
+```
 
 Agriculture is expressed in percentages (0 - 100), representing the percentage
 of the male population involved in agriculture.  
@@ -67,12 +67,12 @@ up with signs.)
 Interestingly, the unadjusted estimate is
 
 {lang=r,line-numbers=off}
-~~~
+```
 summary(lm(Fertility ~ Agriculture, data = swiss))$coefficients
             Estimate Std. Error t value  Pr(>|t|)
 (Intercept)  60.3044    4.25126  14.185 3.216e-18
 Agriculture   0.1942    0.07671   2.532 1.492e-02
-~~~
+```
 
 Notice that the sign of the slope estimate reversed! This is an
 example of so-called "Simpson's Paradox". This purported paradox (which is actually not
@@ -94,7 +94,7 @@ different than the generating ones. More than anything, this illustrates that mu
 modeling is hard stuff.
 
 {lang=r,line-numbers=off}
-~~~
+```
 > n = 100; x2 <- 1 : n; x1 = .01 * x2 + runif(n, -.1, .1); y = -x1 + x2 + rnorm(n, sd = .01)
 > summary(lm(y ~ x1))$coef
 
@@ -106,7 +106,7 @@ x1            96.793      1.862  51.985 3.707e-73
 (Intercept)  0.001933  0.0017709    1.092  2.777e-01
 x1          -1.020506  0.0163560  -62.393  4.211e-80
 x2           1.000133  0.0001643 6085.554 1.544e-272
-~~~
+```
 
 To confirm what's going on, let's look at some plots. In the left
 panel, we plot Y versus X1. Notice the positive relationship. However,
@@ -143,7 +143,7 @@ combination of variables already included. R just drops
 terms that are linear combinations of other terms.
 
 {lang=r,line-numbers=off}
-~~~
+```
 > z <- swiss$Agriculture + swiss$Education
 lm(Fertility ~ . + z, data = swiss)\
 > Call:
@@ -154,7 +154,7 @@ Coefficients:
           66.915            -0.172            -0.258            -0.871             0.104  
 Infant.Mortality                 z  
            1.077                NA  
-~~~
+```
 
 This is a fundamental point of multivariate regression: regression
 models fit the linear space of the regressors. Therefore, any linear
@@ -178,22 +178,22 @@ It is interesting to note that models with
 factor variables as predictors are simply special cases of regression
 models.  As an example, consider the linear model:
 
-{$$}
+$$
 Y_i = \beta_0 + X_{i1} \beta_1 + \epsilon_{i}
-{/$$}
+$$
 
-where each {$$}X_{i1}{/$$} is binary so that it is a 1 if measurement
-{$$}i{/$$} is in a group and 0 otherwise. As an example, consider
+where each $X_{i1}$ is binary so that it is a 1 if measurement
+$i$ is in a group and 0 otherwise. As an example, consider
 a variable as treated versus not in a clinical trial. Or, in a more
 data science context, consider an A/B test comparing two ad campaigns
 where Y is the click through rate.
 
-Refer back to our model. For people in the group {$$}E[Y_i] = \beta_0 + \beta_1{/$$}
-and for people not in the group {$$}E[Y_i] = \beta_0{/$$}.
+Refer back to our model. For people in the group $E[Y_i] = \beta_0 + \beta_1$
+and for people not in the group $E[Y_i] = \beta_0$.
 The least squares fits work out to be
-{$$}\hat \beta_0 + \hat \beta_1{/$$} is the mean for those in the group and {$$}\hat \beta_0{/$$}
+$\hat \beta_0 + \hat \beta_1$ is the mean for those in the group and $\hat \beta_0$
 is the mean for those not in the group.
-The variable {$$}\beta_1{/$$} is interpreted as the increase or decrease in the mean comparing those in the group to those not.
+The variable $\beta_1$ is interpreted as the increase or decrease in the mean comparing those in the group to those not.
 The T-test for that coefficient is exactly the two group T test with a common variance.
 
 Finally, note including a binary variable that is 1 for those not in the group would be redundant,
@@ -206,21 +206,21 @@ those not in the group would just be the subtraction of these two. Thus, it's li
 Consider a multilevel factor level. For didactic reasons, let's say a three level factor. As an example
 consider a variable for US political party affiliation: Republican, Democrat, Independent/other. Let's use the model:
 
-{$$}Y_i = \beta_0 + X_{i1} \beta_1 + X_{i2} \beta_2 + \epsilon_i.{/$$}
+$$Y_i = \beta_0 + X_{i1} \beta_1 + X_{i2} \beta_2 + \epsilon_i.$$
 
-Here the variable {$$}X_{i1}{/$$} is 1 for Republicans and 0 otherwise,
-the variab1e {$$}X_{i2}{/$$} is 1 for Democrats and 0 otherwise. As before, we don't
-need an {$$}X_{i3}{/$$} for Independent/Other, since it would be redundant.
+Here the variable $X_{i1}$ is 1 for Republicans and 0 otherwise,
+the variab1e $X_{i2}$ is 1 for Democrats and 0 otherwise. As before, we don't
+need an $X_{i3}$ for Independent/Other, since it would be redundant.
 
 So now consider the implications of more model. If person
-{$$}i{/$$} is Republican then {$$}E[Y_i] = \beta_0 +\beta_1{/$$}. On the other hand,
-If person {$$}i{/$$} is Democrat then {$$}E[Y_i] = \beta_0 + \beta_2{/$$}.
-Finally, If $i$ is Independent/Other {$$}E[Y_i] = \beta_0{/$$}.
+$i$ is Republican then $E[Y_i] = \beta_0 +\beta_1$. On the other hand,
+If person $i$ is Democrat then $E[Y_i] = \beta_0 + \beta_2$.
+Finally, If $i$ is Independent/Other $E[Y_i] = \beta_0$.
 
 So, we can interpret our coefficients as follows.
-{$$}\beta_1{/$$} compares the mean for Republicans to that of Independents/Others.
-{$$}\beta_2{/$$} compares the mean for Democrats to that of Independents/Others.
-{$$}\beta_1 - \beta_2{/$$} compares the mean for Republicans to that of Democrats.
+$\beta_1$ compares the mean for Republicans to that of Independents/Others.
+$\beta_2$ compares the mean for Democrats to that of Independents/Others.
+$\beta_1 - \beta_2$ compares the mean for Republicans to that of Democrats.
 Notice the coefficients are all comparisons to the category that we left out, Independents/Others.
 If one category is an obvious reference category, chose that one to leave our.
 In R, if our variable is a factor variable, it will create the dummy variables for us and pick one of the
@@ -235,14 +235,14 @@ let's assume (probably accurately)
 that these were annoying bad insects, like fleas, mosquitoes or cockroaches, and not good ones like butterflies
 or ladybugs. After getting over that mental hurdle, let's plot the data.
 
-require(datasets);data(InsectSprays); require(stats); require(ggplot2)
 {lang=r,line-numbers=off}
-~~~
+```
+require(datasets);data(InsectSprays); require(stats); require(ggplot2)
 g = ggplot(data = InsectSprays, aes(y = count, x = spray, fill  = spray))
 g = g + geom_violin(colour = "black", size = 2)
 g = g + xlab("Type of spray") + ylab("Insect count")
 g
-~~~
+```
 
 Here's the plot. There's probably better ways to model this data, but let's use a
 linear model just to illustrate factor variables.
@@ -253,7 +253,7 @@ linear model just to illustrate factor variables.
 First, let's set Spray A as the reference (the default, since it has the lowest alphanumeric factor level).
 
 {lang=r,line-numbers=off}
-~~~
+```
 > summary(lm(count ~ spray, data = InsectSprays))$coef
             Estimate Std. Error t value  Pr(>|t|)
 (Intercept)  14.5000      1.132 12.8074 1.471e-19
@@ -262,7 +262,7 @@ sprayC      -12.4167      1.601 -7.7550 7.267e-11
 sprayD       -9.5833      1.601 -5.9854 9.817e-08
 sprayE      -11.0000      1.601 -6.8702 2.754e-09
 sprayF        2.1667      1.601  1.3532 1.806e-01
-~~~
+```
 
 Therefore, 0.8333 is the estimated mean comparing Spray B to Spray A (as B - A),
 -12.4167 compares Spray C to Spray A (as C - A) and so on. The inferencial statistics: standard
@@ -277,7 +277,7 @@ Let's hard code the factor levels so we can directly see what's going on. Rememb
 leave out the dummy variable for the reference level.
 
 {lang=r,line-numbers=off}
-~~~
+```
 > summary(lm(count ~
              I(1 * (spray == 'B')) + I(1 * (spray == 'C')) +
              I(1 * (spray == 'D')) + I(1 * (spray == 'E')) +
@@ -290,7 +290,7 @@ I(1 * (spray == "C")) -12.4167      1.601 -7.7550 7.267e-11
 I(1 * (spray == "D"))  -9.5833      1.601 -5.9854 9.817e-08
 I(1 * (spray == "E")) -11.0000      1.601 -6.8702 2.754e-09
 I(1 * (spray == "F"))   2.1667      1.601  1.3532 1.806e-01
-~~~
+```
 
 Of course, it's identical.  You might further ask yourself, what would
 happen if I included a dummy variable for Spray A? Would the world implode?
@@ -298,7 +298,7 @@ No, it just realizes that one of the dummy variables is redundant and drops
 it.
 
 {lang=r,line-numbers=off}
-~~~
+```
 > summary(lm(count ~
    I(1 * (spray == 'B')) + I(1 * (spray == 'C')) +  
    I(1 * (spray == 'D')) + I(1 * (spray == 'E')) +
@@ -311,14 +311,14 @@ I(1 * (spray == "C")) -12.4167      1.601 -7.7550 7.267e-11
 I(1 * (spray == "D"))  -9.5833      1.601 -5.9854 9.817e-08
 I(1 * (spray == "E")) -11.0000      1.601 -6.8702 2.754e-09
 I(1 * (spray == "F"))   2.1667      1.601  1.3532 1.806e-01
-~~~
+```
 
 However, if we drop the intercept, then the Spray A term is
 no longer redundant. The each coefficient is the mean for
 that Spray.
 
 {lang=r,line-numbers=off}
-~~~
+```
 > summary(lm(count ~ spray - 1, data = InsectSprays))$coef
        Estimate Std. Error t value  Pr(>|t|)
 
@@ -328,7 +328,7 @@ sprayC    2.083      1.132   1.840 7.024e-02
 sprayD    4.917      1.132   4.343 4.953e-05
 sprayE    3.500      1.132   3.091 2.917e-03
 sprayF   16.667      1.132  14.721 1.573e-22
-~~~
+```
 
 So, for example, 14.5 is the mean for Spray A (as we already knew),
 15.33 is the mean for Spray B (14.5 + 0.8333 from our previous model formulation),
@@ -341,7 +341,7 @@ exactly the empirical means of the groups. We can use dplyr to check this really
 easily and grab the mean for each group.
 
 {lang=r,line-numbers=off}
-~~~
+```
 > library(dplyr)
 > summarise(group_by(InsectSprays, spray), mn = mean(count))
 Source: local data frame [6 x 2]
@@ -353,7 +353,7 @@ Source: local data frame [6 x 2]
 4     D  4.917
 5     E  3.500
 6     F 16.667
-~~~
+```
 
 Often your lowest alphanumeric level isn't the level that you're most
 interested in as a reference group. There's an easy fix for that with
@@ -362,8 +362,8 @@ example. We created a variable `spray2` that has Spray C as the reference
 level.
 
 {lang=r,line-numbers=off}
+```
 > spray2 <- relevel(InsectSprays$spray, "C")
-~~~
 > summary(lm(count ~ spray2, data = InsectSprays))$coef
             Estimate Std. Error t value  Pr(>|t|)
 (Intercept)    2.083      1.132  1.8401 7.024e-02
@@ -372,7 +372,7 @@ spray2B       13.250      1.601  8.2755 8.510e-12
 spray2D        2.833      1.601  1.7696 8.141e-02
 spray2E        1.417      1.601  0.8848 3.795e-01
 spray2F       14.583      1.601  9.1083 2.794e-13
-~~~
+```
 
 Now the intercept is the mean for Spray C and all of the coefficients are interpreted
 with respect to Spray C. So, 12.417 is the comparison between Spray A and Spray C (as A - C)
@@ -415,8 +415,7 @@ multivariable context. Just to remind ourselves of the dataset, here's the first
 rows.
 
 {lang=r,line-numbers=off}
-~~~
-> spray2 <- relevel(InsectSprays$spray, "C")
+```
 > library(datasets); data(swiss)
 > head(swiss)
 
@@ -427,7 +426,7 @@ Franches-Mnt      92.5        39.7           5         5    93.40             20
 Moutier           85.8        36.5          12         7    33.77             20.3
 Neuveville        76.9        43.5          17        15     5.16             20.6
 Porrentruy        76.1        35.3           9         7    90.57             26.6
-~~~
+```
 
 Let's create a  binary variable out of the variable Catholic to illustrate dummy
 variables in multivariable models. However, it should be noted that this isn't
@@ -435,52 +434,51 @@ patently absurd, since the variable is highly bimodal anyway. Let's just split
 at majority Catholic or not:
 
 {lang=r,line-numbers=off}
-> spray2 <- relevel(InsectSprays$spray, "C")
-~~~
+```
 library(dplyr);
 swiss = mutate(swiss, CatholicBin = 1 * (Catholic > 50))
-~~~
+```
 
 Since we're interested in Agriculture as a variable and Fertility as an outcome, let's plot
 those two color coded by the binary Catholic variable:
 
 {lang=r,line-numbers=off}
-~~~
+```
 g = ggplot(swiss, aes(x = Agriculture, y = Fertility, colour = factor(CatholicBin)))
 g = g + geom_point(size = 6, colour = "black") + geom_point(size = 4)
 g = g + xlab("% in Agriculture") + ylab("Fertility")
 g
-~~~
+```
 
 ![Plot of the Swiss dataset color coded by majority catholic.](images/swiss2.png)
 
 Our model is:
 
-{$$}Y_i = \beta_0 + X_{i1} \beta_1 + X_{i2} \beta_2 + \epsilon_i{/$$}
+$$Y_i = \beta_0 + X_{i1} \beta_1 + X_{i2} \beta_2 + \epsilon_i$$
 
-where {$$}Y_i{/$$} is `Fertility`, {$$}X_{i1}{/$$} is '`Agriculture` and
-{$$}X_{i2}{/$$} is `CatholicBin`. Let's first fit the model with {$$}X_{i2}{/$$}
+where $Y_i$ is `Fertility`, $X_{i1}$ is '`Agriculture` and
+$X_{i2}$ is `CatholicBin`. Let's first fit the model with $X_{i2}$
 removed.
 
 {lang=r,line-numbers=off}
-~~~
+```
 > summary(lm(Fertility ~ Agriculture, data = swiss))$coef
 
             Estimate Std. Error t value  Pr(>|t|)
 (Intercept)  60.3044    4.25126  14.185 3.216e-18
 Agriculture   0.1942    0.07671   2.532 1.492e-02
-~~~
+```
 
 This model just assumes one line through the data (linear regression).
 Now let's add our second variable. Notice that the model is
 
-{$$}Y_i = \beta_0 + X_{i1} \beta_1 + \epsilon_{i}{/$$}
+$$Y_i = \beta_0 + X_{i1} \beta_1 + \epsilon_{i}$$
 
-when {$$}X_{i2} = 0{/$$} and
+when $X_{i2} = 0$ and
 
-{$$}Y_i = (\beta_0 +\beta_2) + X_{i1} \beta_1 + \epsilon_{i}{/$$}
+$$Y_i = (\beta_0 +\beta_2) + X_{i1} \beta_1 + \epsilon_{i}$$
 
-when {$$}X_{i2] = 1{/$$}. Thus, the coefficient in front of the binary
+when $X_{i2} = 1$. Thus, the coefficient in front of the binary
 variable is the change in the intercept between non-Catholic and Catholic
 majority provinces.  In other words, this model fits parallel lines
 for the two levels of the factor variable. If the factor variable had
@@ -488,7 +486,7 @@ for the two levels of the factor variable. If the factor variable had
 the factors are the change in the intercepts to the reference level.
 
 {lang=r,line-numbers=off}
-~~~
+```
 ## Parallel lines
 summary(lm(Fertility ~ Agriculture + factor(CatholicBin), data = swiss))$coef
 
@@ -496,7 +494,7 @@ summary(lm(Fertility ~ Agriculture + factor(CatholicBin), data = swiss))$coef
 (Intercept)           60.8322     4.1059  14.816 1.032e-18
 Agriculture            0.1242     0.0811   1.531 1.329e-01
 factor(CatholicBin)1   7.8843     3.7484   2.103 4.118e-02
-~~~
+```
 Thus, 7.8843 is the estimated
 change in the intercept in the expected relationship between Agriculture and
 Fertility going from a non-Catholic majority province to a Catholic majority.
@@ -504,24 +502,24 @@ Fertility going from a non-Catholic majority province to a Catholic majority.
 Often, however, we want both a different intercept and slope. This is easily
 obtained with an interaction term
 
-{$$}Y_i = \beta_0 + X_{i1} \beta_1 + X_{i2} \beta_2 +  X_{i1}X_{i2} \beta_3 + \epsilon_i .{/$$}
+$$Y_i = \beta_0 + X_{i1} \beta_1 + X_{i2} \beta_2 +  X_{i1}X_{i2} \beta_3 + \epsilon_i .$$
 
-Now consider with {$$}X_{i2} = 0{/$$}, the model reduces to:
+Now consider with $X_{i2} = 0$, the model reduces to:
 
-{$$}Y_i = \beta_0 + X_{i1} \beta_1 + \epsilon_{i}.{/$$}
+$$Y_i = \beta_0 + X_{i1} \beta_1 + \epsilon_{i}.$$
 
-When {$$}X_{i2} = 1{/$$} the model is
+When $X_{i2} = 1$ the model is
 
 
-{$$}Y_i = (\beta_0 + \beta_2) + X_{i1} (\beta_1 + \beta_3) + \epsilon_{i}.{/$$}
+$$Y_i = (\beta_0 + \beta_2) + X_{i1} (\beta_1 + \beta_3) + \epsilon_{i}.$$
 
-Thus, the coefficient in front of the main effect {$$}X_{i2}{/$$}, labeled {$$}\beta_2{/$$} in our model, is the
+Thus, the coefficient in front of the main effect $X_{i2}$, labeled $\beta_2$ in our model, is the
 change in the intercept, while the coefficient in front of
-interaction term {$$}X_{i2}X_{i1}{/$$}, labeled {$$}\beta_3{/$$} in our model, is the
+interaction term $X_{i2}X_{i1}$, labeled $\beta_3$ in our model, is the
 change in the slope. Let's try it:
 
 {lang=r,line-numbers=off}
-~~~
+```
 > summary(lm(Fertility ~ Agriculture * factor(CatholicBin), data = swiss))$coef
 
                                  Estimate Std. Error t value  Pr(>|t|)
@@ -529,7 +527,7 @@ change in the slope. Let's try it:
 Agriculture                       0.09612    0.09881  0.9727 3.361e-01
 factor(CatholicBin)1              2.85770   10.62644  0.2689 7.893e-01
 Agriculture:factor(CatholicBin)1  0.08914    0.17611  0.5061 6.153e-01
-~~~
+```
 
 Thus, 2.8577 is the estimated change in the intercept of the linear relationship between Agriculure and
 Fertility going from non-Catholic majority to
